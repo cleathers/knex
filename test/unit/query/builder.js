@@ -922,18 +922,24 @@ describe("QueryBuilder", function() {
   });
 
   it("nested having", function() {
-    testsql(qb().select('*').from('users').having(function(){
-      this.where('email', '>', 1);
+    testsql(qb().select('*').from('users').having('email', '=', 'foo').orHaving(function(qb) {
+      qb.having('name', '=', 'bar').having('age', '=', 25);
     }), {
-      mysql: 'select * from `users` having (`email` > ?)',
-      default: 'select * from "users" having ("email" > ?)'
+      mysql: {
+        sql: 'select * from `users` having `email` = ? or (`name` = ? and `age` = ?)',
+        bindings: ['foo', 'bar', 25]
+      },
+      default: {
+        sql: 'select * from "users" having "email" = ? or ("name" = ? and "age" = ?)',
+        bindings: ['foo', 'bar', 25]
+      }
     });
   });
 
   it("nested or havings", function() {
     testsql(qb().select('*').from('users').having(function(){
-      this.where('email', '>', 10);
-      this.orWhere('email', '=', 7);
+      this.having('email', '>', 10);
+      this.orHaving('email', '=', 7);
     }), {
       mysql: 'select * from `users` having (`email` > ? or `email` = ?)',
       default: 'select * from "users" having ("email" > ? or "email" = ?)'
