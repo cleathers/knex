@@ -487,20 +487,20 @@ assign(Builder.prototype, {
     if (typeof column === 'function') {
       return this.havingWrapped(column);
     }
-		  // Support "having true || having false"
-		if (column === false || column === true) {
-		 return this.having(1, '=', column ? 1 : 0);
-		}
-		// Allow a raw statement to be passed along to the query.
-		if (column instanceof Raw && arguments.length === 1) return this.havingRaw(column);
+    // Support "having true || having false"
+    if (column === false || column === true) {
+      return this.having(1, '=', column ? 1 : 0);
+    }
+    // Allow a raw statement to be passed along to the query.
+    if (column instanceof Raw && arguments.length === 1) return this.havingRaw(column);
 
-		// Enable the having('key', value) syntax, only when there
-		// are explicitly two arguments passed, so it's not possible to
-		// do having('key', '!=') and have that turn into where key != null
-		if (arguments.length === 2) {
-		 value = operator;
-		 operator = '=';
-		}
+    // Enable the having('key', value) syntax, only when there
+    // are explicitly two arguments passed, so it's not possible to
+    // do having('key', '!=') and have that turn into where key != null
+    if (arguments.length === 2) {
+      value = operator;
+      operator = '=';
+    }
 
     this._statements.push({
       grouping: 'having',

@@ -281,35 +281,34 @@ assign(QueryCompiler.prototype, {
   // ------
 
   having: function() {
-		var havings = this.grouped.having;
-		if (!havings) return;
+    var havings = this.grouped.having;
+    if (!havings) return;
 
-		var i = -1,
-				sql = [];
+    var i = -1,
+    sql = [];
 
-		while (++i < havings.length) {
-			var stmt = havings[i];
-			var val = this[stmt.type](stmt);
+    while (++i < havings.length) {
+      var stmt = havings[i];
+      var val = this[stmt.type](stmt);
 
-			if (val) {
-				if (sql.length === 0) {
-					sql[0] = 'having';
-				} else {
-					sql.push(stmt.bool);
-				}
-					sql.push(val);
-			}
-		}
-		return sql.length > 1 ? sql.join(' ') : '';
+      if (val) {
+        if (sql.length === 0) {
+          sql[0] = 'having';
+        } else {
+          sql.push(stmt.bool);
+        }
+        sql.push(val);
+      }
+    }
+    return sql.length > 1 ? sql.join(' ') : '';
   },
 
-	havingBasic: function havingBasic(statement) {
-    // return this.whereBasic(statement);
+  havingBasic: function havingBasic(statement) {
     return this._not(statement, '') +
-      this.formatter.wrap(statement.column) + ' ' +
-      this.formatter.operator(statement.operator) + ' ' +
-      this.formatter.parameter(statement.value);
-	},
+    this.formatter.wrap(statement.column) + ' ' +
+    this.formatter.operator(statement.operator) + ' ' +
+    this.formatter.parameter(statement.value);
+  },
 
   havingWrapped: function havingWrapped(statement) {
     var val = this.formatter.rawOrFn(statement.value, 'having')
@@ -317,7 +316,6 @@ assign(QueryCompiler.prototype, {
   },
 
   havingRaw: function(statement) {
-    // return this.whereRaw(statement);
     return this.formatter.unwrapRaw(statement.value);
   },
 
